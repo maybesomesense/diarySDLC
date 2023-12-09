@@ -1,6 +1,6 @@
 #include "nextwindowthird.h"
 #include "./ui_nextwindowthird.h"
-
+//#include <QtSql>
 
 #include "financeNote.h"
 #include <QStack>
