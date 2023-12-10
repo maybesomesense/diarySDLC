@@ -1,3 +1,6 @@
+/// ТЕЛЕФОННАЯ КНИГА
+/// ТЕЛЕФОННАЯ КНИГА
+/// ТЕЛЕФОННАЯ КНИГА
 #include "nextwindowsecond.h"
 #include "./ui_nextwindowsecond.h"
 #include <QMessageBox>
@@ -6,7 +9,6 @@
 #include <QGraphicsWidget>
 #include "phoneBook.h"
 #include <QStack>
-// Телефонная книга
 
 phoneBook* phones = new phoneBook();
 QStack<phoneBook*> takenActions3;

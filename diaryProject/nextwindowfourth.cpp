@@ -1,9 +1,13 @@
+/// ЗАМЕТКИ
+/// ЗАМЕТКИ
+/// ЗАМЕТКИ
 #include "nextwindowfourth.h"
 #include "./ui_nextwindowfourth.h"
 #include "note.h"
 #include <QStack>
 #include <QMessageBox>
-// Заметки
+#include "dbpostgre.h"
+
 note* notes = new note();
 QStack<note*> takenActions2;
 
@@ -92,17 +96,45 @@ void nextWindowFourth::on_pushButton_6_clicked()        // установить 
 }
 
 
-void nextWindowFourth::on_pushButton_7_clicked()        // запись в файл
+
+// запись в бд
+void nextWindowFourth::on_pushButton_7_clicked()
 {
-    ofstream out;          // поток для записи
-    out.open("D:\\My shit)\\coursachTry\\notes.txt"); // окрываем файл для записи
-    out << *notes;
-    out.close();
+//    ofstream out;          // поток для записи
+//    out.open("D:\\My shit)\\coursachTry\\notes.txt"); // окрываем файл для записи
+//    out << *notes;
+//    out.close();
+    QSqlDatabase db = initializeDb();
+
+    if(db.open()){
+        QSqlQuery query;
+
+        if(query.prepare("INSERT INTO public.task (ended_tasks, tasks) VALUES (?, ?)")){
+            query.addBindValue("Завершенные задачи");
+            query.addBindValue("Активные задачи");
+
+
+            if (query.exec()) {
+                qDebug() << "Данные успешно добавлены в таблицу tasks";
+            } else {
+                qDebug() << "Ошибка при добавлении данных в таблицу tasks:";
+                    qDebug() << "SQL-запрос:" << query.lastQuery();
+                    qDebug() << "Значения параметров:";
+                    qDebug() << ":ended_tasks" << query.boundValue(":ended_tasks").toString();
+                    qDebug() << ":tasks" << query.boundValue(":tasks").toString();
+            }
+        }
+        else{
+            qDebug() << "Ошибка при подготовке запроса:";
+        }
+    }
+
+    db.close();
 }
 
 
-
-void nextWindowFourth::on_pushButton_8_clicked()        // чтение из файла
+// чтение из бд
+void nextWindowFourth::on_pushButton_8_clicked()
 {
     ifstream in;
     notes->clearAllPages();
@@ -110,8 +142,6 @@ void nextWindowFourth::on_pushButton_8_clicked()        // чтение из ф�
     in >> *notes;
     in.close();
 }
-
-
 
 
 

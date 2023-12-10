@@ -1,3 +1,6 @@
+/// ЖЕЛАНИЯ
+/// ЖЕЛАНИЯ
+/// ЖЕЛАНИЯ
 #include "nextwindowsixth.h"
 #include "ui_nextwindowsixth.h"
 #include "Tree.h"
@@ -135,7 +138,8 @@ void nextWindowSixth::on_pushButton_4_clicked()     // установить на
 }
 
 
-void nextWindowSixth::on_pushButton_7_clicked()     // запись в файл
+// Добавить в бд
+void nextWindowSixth::on_pushButton_7_clicked()
 {
     FileStream out;          // поток для записи
     //out.Open("D:\\My shit)\\coursachTry\\wishes.txt", 1); // окрываем файл для записи
@@ -144,7 +148,8 @@ void nextWindowSixth::on_pushButton_7_clicked()     // запись в файл
 }
 
 
-void nextWindowSixth::on_pushButton_8_clicked()     // чтение из файла
+// Чтение из бд
+void nextWindowSixth::on_pushButton_8_clicked()
 {
     Node<wishNote>* node = nullptr;					//узел дерева для вставки
     TreeIterator<wishNote> iterator(&wishes);
