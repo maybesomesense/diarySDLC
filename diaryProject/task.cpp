@@ -32,6 +32,10 @@ void task::appendEndedTasks(QString task){
     endedTasks.append(task);
 }
 
+void task::deleteTask(QString task){
+    tasks.removeOne(task);
+}
+
 void task::clearAllTasks(){
     tasks.clear();
     endedTasks.clear();

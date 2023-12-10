@@ -9,6 +9,7 @@
 #include <QGraphicsWidget>
 #include "phoneBook.h"
 #include <QStack>
+#include "dbpostgre.h"
 
 phoneBook* phones = new phoneBook();
 QStack<phoneBook*> takenActions3;

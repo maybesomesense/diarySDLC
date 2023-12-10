@@ -8,6 +8,7 @@
 #include "Alhoritm.cpp"
 #include <QMessageBox>
 #include "Stack.h"
+#include "dbpostgre.h"
 
 
 Stack<wishNote> stack;							//стек для сохранения предыдущих действий

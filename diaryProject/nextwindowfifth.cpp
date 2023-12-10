@@ -96,6 +96,7 @@ void nextWindowFifth::on_pushButton_3_clicked()         // добавить в �
             i++;
         }
     }
+    allTasks->deleteTask(ui->lineEdit_2->text());
     takenActions.push(allTasks);
 }
 
@@ -108,30 +109,82 @@ void nextWindowFifth::on_pushButton_5_clicked()
 //    out.open("D:\\My shit)\\coursachTry\\tasks.txt"); // окрываем файл для записи
 //    out << *allTasks;
 //    out.close();
+////////////////////////////////////////
+//
 
+//    QList<QString>::iterator iterTasks;
+//    QList<QString>::iterator iterEndedTasks = allTasks->getEndedTasks().begin();
+////////////////////////////////////////
+//    out << trueTasks.count() << '\t' << allTasks->getEndedTasks().count() << endl;
+//    out << "Задачи" << "\t" << "Выполненные задачи" << endl;
+
+
+//     исключить из задач выполненные задачи
+//    iterTasks = trueTasks.begin();
+
+
+// first /////////
+//    do{
+//        if(iterTasks == trueTasks.end()){
+//            out << " " << '\t' << iterEndedTasks->toStdString() << endl;
+//            iterEndedTasks++;
+//            continue;
+//        }
+//        else if(iterEndedTasks == object.endedTasks.end()){
+//            out << iterTasks->toStdString() << '\t' << " " << endl;
+//            iterTasks++;
+//            continue;
+//        }
+//        if(iterTasks == trueTasks.end() && iterEndedTasks == object.endedTasks.end()) break;
+//        out << iterTasks->toStdString() << '\t' << iterEndedTasks->toStdString() << endl;
+//        iterTasks++, iterEndedTasks++;
+//    }while(iterTasks != trueTasks.end() && iterEndedTasks != object.endedTasks.end());
+// /////////////
+
+    // инициализируем бд
     QSqlDatabase db = initializeDb();
 
+    /// передаём данные в tasks
     if(db.open()){
         QSqlQuery query;
+        QList<QString> tasks = allTasks->getTasks();
+        foreach(const QString &task, tasks){
+            if(query.prepare("INSERT INTO public.\"defaultTasks\" (tasks) VALUES (?)")){
+                query.addBindValue(task);
 
-        if(query.prepare("INSERT INTO public.task (ended_tasks, tasks) VALUES (?, ?)")){
-            query.addBindValue("Завершенные задачи");
-            query.addBindValue("Активные задачи");
-
-
-            if (query.exec()) {
-                qDebug() << "Данные успешно добавлены в таблицу tasks";
-            } else {
-                qDebug() << "Ошибка при добавлении данных в таблицу tasks:";
+                if (query.exec()) {
+                    qDebug() << "Данные успешно добавлены в таблицу defaultTasks";
+                } else {
+                    qDebug() << "Ошибка при добавлении данных в таблицу defaultTasks:";
                     qDebug() << "SQL-запрос:" << query.lastQuery();
                     qDebug() << "Значения параметров:";
-                    qDebug() << ":ended_tasks" << query.boundValue(":ended_tasks").toString();
                     qDebug() << ":tasks" << query.boundValue(":tasks").toString();
+                }
+            }
+            else{
+                qDebug() << "Ошибка при подготовке запроса:";
             }
         }
-        else{
-            qDebug() << "Ошибка при подготовке запроса:";
+
+        tasks = allTasks->getEndedTasks();
+        foreach(const QString &task, tasks){
+            if(query.prepare("INSERT INTO public.\"endedTasks\" (tasks) VALUES (?)")){
+                query.addBindValue(task);
+
+                if (query.exec()) {
+                    qDebug() << "Данные успешно добавлены в таблицу defaultTasks";
+                } else {
+                    qDebug() << "Ошибка при добавлении данных в таблицу defaultTasks:";
+                    qDebug() << "SQL-запрос:" << query.lastQuery();
+                    qDebug() << "Значения параметров:";
+                    qDebug() << ":tasks" << query.boundValue(":tasks").toString();
+                }
+            }
+            else{
+                qDebug() << "Ошибка при подготовке запроса:";
+            }
         }
+
     }
 
     db.close();

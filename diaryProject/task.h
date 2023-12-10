@@ -23,6 +23,7 @@ public:
     task() = default;
     ~task();
     void operator=(task& object);
+    void deleteTask(QString task);
 
     friend ifstream& operator>>(ifstream& in, task& object);
     friend ofstream& operator<<(ofstream& out, task& object);

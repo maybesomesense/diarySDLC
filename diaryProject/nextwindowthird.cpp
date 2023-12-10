@@ -1,6 +1,9 @@
+/// ФИНАНСОВЫЕ ЗАПИСИ
+/// ФИНАНСОВЫЕ ЗАПИСИ
+/// ФИНАНСОВЫЕ ЗАПИСИ
 #include "nextwindowthird.h"
 #include "./ui_nextwindowthird.h"
-//#include <QtSql>
+#include "dbpostgre.h"
 
 #include "financeNote.h"
 #include <QStack>
