@@ -105,42 +105,6 @@ void nextWindowFifth::on_pushButton_3_clicked()         // добавить в �
 // запись в бд
 void nextWindowFifth::on_pushButton_5_clicked()
 {
-//    ofstream out;          // поток для записи
-//    out.open("D:\\My shit)\\coursachTry\\tasks.txt"); // окрываем файл для записи
-//    out << *allTasks;
-//    out.close();
-////////////////////////////////////////
-//
-
-//    QList<QString>::iterator iterTasks;
-//    QList<QString>::iterator iterEndedTasks = allTasks->getEndedTasks().begin();
-////////////////////////////////////////
-//    out << trueTasks.count() << '\t' << allTasks->getEndedTasks().count() << endl;
-//    out << "Задачи" << "\t" << "Выполненные задачи" << endl;
-
-
-//     исключить из задач выполненные задачи
-//    iterTasks = trueTasks.begin();
-
-
-// first /////////
-//    do{
-//        if(iterTasks == trueTasks.end()){
-//            out << " " << '\t' << iterEndedTasks->toStdString() << endl;
-//            iterEndedTasks++;
-//            continue;
-//        }
-//        else if(iterEndedTasks == object.endedTasks.end()){
-//            out << iterTasks->toStdString() << '\t' << " " << endl;
-//            iterTasks++;
-//            continue;
-//        }
-//        if(iterTasks == trueTasks.end() && iterEndedTasks == object.endedTasks.end()) break;
-//        out << iterTasks->toStdString() << '\t' << iterEndedTasks->toStdString() << endl;
-//        iterTasks++, iterEndedTasks++;
-//    }while(iterTasks != trueTasks.end() && iterEndedTasks != object.endedTasks.end());
-// /////////////
-
     // инициализируем бд
     QSqlDatabase db = initializeDb();
 
@@ -194,12 +158,6 @@ void nextWindowFifth::on_pushButton_5_clicked()
 // чтение из бд
 void nextWindowFifth::on_pushButton_6_clicked()
 {
-    ifstream in;
-    allTasks->clearAllTasks();
-    in.open("D:\\My shit)\\coursachTry\\tasks.txt");
-    in >> *allTasks;
-    in.close();
-
     ui->tableWidget->clear();
     ui->tableWidget_2->clear();
     while(ui->tableWidget->rowCount() > 0){
@@ -208,28 +166,69 @@ void nextWindowFifth::on_pushButton_6_clicked()
     while(ui->tableWidget_2->rowCount() > 0){
         ui->tableWidget_2->removeRow(0);
     }
+    // проверить тут моментик
+    allTasks->clearAllTasks();
 
-    QString temp;
+    QSqlDatabase db = initializeDb();
+
     int i = 0;
+    /// передаём данные в tasks
+    if(db.open()){
 
-    foreach(temp, allTasks->getTasks()){
-        ui->tableWidget->insertRow(i);
-        QTableWidgetItem *itm1= new QTableWidgetItem();
-        itm1->setText(temp);
-        ui->tableWidget->setItem(i,0,itm1);
-        i++;
+        QSqlQuery query;
+
+        if(query.prepare("SELECT * FROM \"defaultTasks\";")){
+            if (query.exec()) {
+                while(query.next()){
+                    QString value = query.value("tasks").toString();
+                    qDebug() << "DEFAULT TASKS: Value from column: " << value;
+                    ui->tableWidget->insertRow(i);
+                    QTableWidgetItem *itm1= new QTableWidgetItem();
+                    itm1->setText(value);
+                    ui->tableWidget->setItem(i,0,itm1);
+                    i++;
+                } //else{
+                qDebug() << "Данные закончились";
+                //}
+
+            } else {
+                qDebug() << "Ошибка при добавлении данных в таблицу defaultTasks:";
+                qDebug() << "SQL-запрос:" << query.lastQuery();
+                qDebug() << "Значения параметров:";
+                qDebug() << ":tasks" << query.boundValue(":tasks").toString();
+            }
+        }
+        else{
+            qDebug() << "Ошибка при подготовке запроса:";
+        }
+
+        i = 0;
+        if(query.prepare("SELECT * FROM \"endedTasks\";")){
+            if (query.exec()) {
+                while(query.next()){
+                    QString value = query.value("tasks").toString();
+                    qDebug() << "Value from column: " << value;
+                    ui->tableWidget_2->insertRow(i);
+                    QTableWidgetItem *itm1= new QTableWidgetItem();
+                    itm1->setText(value);
+                    ui->tableWidget_2->setItem(i,0,itm1);
+                    i++;
+                } //else{
+                qDebug() << "Данные закончились";
+                //}
+            } else {
+                qDebug() << "Ошибка при добавлении данных в таблицу defaultTasks:";
+                qDebug() << "SQL-запрос:" << query.lastQuery();
+                qDebug() << "Значения параметров:";
+                qDebug() << ":tasks" << query.boundValue(":tasks").toString();
+            }
+        }
+        else{
+            qDebug() << "Ошибка при подготовке запроса:";
+        }
     }
 
-    QString temp2;
-    i = 0;
-    foreach(temp2, allTasks->getEndedTasks()){
-        ui->tableWidget_2->insertRow(i);
-        QTableWidgetItem *itm1= new QTableWidgetItem();
-        itm1->setText(temp2);
-        ui->tableWidget_2->setItem(i,0,itm1);
-        i++;
-    }
-
+    db.close();
     takenActions.push(allTasks);
 }
 
