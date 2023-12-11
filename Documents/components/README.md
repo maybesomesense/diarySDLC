@@ -1,1 +1,3 @@
-![Компонент](images/components.png)
+* Диаграмма компонентов
+
+![Диаграмма компонентов](images/components.png)
