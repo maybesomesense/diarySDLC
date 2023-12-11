@@ -1,0 +1,1 @@
+![Компонент](images/components.png)
